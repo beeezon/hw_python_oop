@@ -1,4 +1,4 @@
-from turtle import distance
+'''from turtle import distance'''
 
 M_IN_KM = 1000
 
@@ -62,7 +62,8 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        x = InfoMessage(workout_type, data[1], self.get_distance(), self.get_mean_speed(), self.get_spent_calories())
+        x = InfoMessage(workout_type, data[1], self.get_distance(),
+                        self.get_mean_speed(), self.get_spent_calories())
         return x.get_message()
 
 
@@ -73,8 +74,9 @@ class Running(Training):
         """Получить количество затраченных калорий."""
         coeff_calorie_1 = 18
         coeff_calorie_2 = 20
-        return ((coeff_calorie_1 * self.get_mean_speed() - coeff_calorie_2) * self.weight
-                / M_IN_KM * self.duration)
+        return ((coeff_calorie_1 * self.get_mean_speed() - coeff_calorie_2)
+                * self.weight / M_IN_KM * self.duration)
+
 
 class SportsWalking(Training):
     def __init__(self,
@@ -95,7 +97,7 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP = 1.38
-    
+
     def __init__(self,
                  action: int,
                  duration: float,
@@ -120,18 +122,18 @@ def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
 
     if workout_type == 'SWM':
-        certain_type = Swimming(data[0], data[1], data[2], data[3], data[4])
+        return Swimming(data[0], data[1], data[2], data[3], data[4])
     elif workout_type == 'RUN':
-        certain_type = Training(data[0], data[1], data[2])
+        return Training(data[0], data[1], data[2])
     else:
-        certain_type = SportsWalking(data[0], data[1], data[2], data[3])
-    return certain_type
+        return SportsWalking(data[0], data[1], data[2], data[3])
+
 
 def main(training: Training) -> None:
     """Главная функция."""
 
     info = training.show_training_info()
-    #print(info.get_message())
+    'print(info.get_message())'
 
 
 if __name__ == '__main__':
