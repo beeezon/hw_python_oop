@@ -1,3 +1,6 @@
+from typing import Dict, List, Type
+
+
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
@@ -36,7 +39,6 @@ class Training:
         self.action = action
         self.duration_hour = duration
         self.weight_kg = weight
-        self.training_type: str = ''
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -74,6 +76,10 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+    MASS_MULTIPLIER_ONE: float = 0.035
+    DEGREE_OF_AVERAGE_SPEED: float = 2
+    MASS_MULTIPLIER_TWO: float = 0.029
+
     def __init__(self,
                  action: int,
                  duration: float,
@@ -81,9 +87,6 @@ class SportsWalking(Training):
                  height: float) -> None:
         super().__init__(action, duration, weight)
         self.height_meter = height
-        self.MASS_MULTIPLIER_ONE: float = 0.035
-        self.DEGREE_OF_AVERAGE_SPEED: float = 2
-        self.MASS_MULTIPLIER_TWO: float = 0.029
 
     def get_spent_calories(self) -> float:
         return ((self.MASS_MULTIPLIER_ONE * self.weight_kg
@@ -108,7 +111,6 @@ class Swimming(Training):
         super().__init__(action, duration, weight)
         self.length_pool_meter = length_pool  # длинна бассейна
         self.count_pool = count_pool  # сколько раз проплыл
-        self.training_type = 'Swimming'
 
     def get_mean_speed(self) -> float:
         """Расчет средней скорости."""
@@ -121,13 +123,13 @@ class Swimming(Training):
                 * self.CALORIES_MULTIPLIER * self.weight_kg)
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    zip_data = {'SWM': Swimming,
-                'RUN': Running,
-                'WLK': SportsWalking}
-    return (zip_data.get(workout_type)(*data))
+    type_workout: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                               'RUN': Running,
+                                               'WLK': SportsWalking}
+    return (type_workout.get(workout_type)(*data))
 
 
 def main(training: Training) -> None:
